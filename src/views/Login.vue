@@ -6,7 +6,7 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-input placeholder="用户名" label="用户" v-model="userName"></el-input>
+          <el-input placeholder="用户名" label="用户名" v-model="userName"></el-input>
           <el-input placeholder="密码" v-model="pwd"></el-input>
         </el-col>
       </el-row>
