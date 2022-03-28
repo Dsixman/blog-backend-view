@@ -23,9 +23,33 @@ const routes = [
    },
   },
   {
-    path: '/article',
-    name: 'Article',
-    component: () => import(/* webpackChunkName: "Article" */ '../views/Article.vue'),
+    path: '/manageblog',
+    name: 'ManageBlog',
+    component: () => import(/* webpackChunkName: "Article" */ '../views/ManageBlog.vue'),
+    meta: { // 在路由配置中加入meta:{requireAuth: true}
+      requireAuth: true
+   },
+  },
+  {
+    path: '/editblog',
+    name: 'EditBlog',
+    component: () => import(/* webpackChunkName: "Article" */ '../views/EditBlog.vue'),
+    meta: { // 在路由配置中加入meta:{requireAuth: true}
+      requireAuth: true
+   },
+  },
+  {
+    path: '/managetag',
+    name: 'managetag',
+    component: () => import(/* webpackChunkName: "Article" */ '../views/ManageTag.vue'),
+    meta: { // 在路由配置中加入meta:{requireAuth: true}
+      requireAuth: true
+   },
+  },
+  {
+    path: '/managecategory',
+    name: 'managecategory',
+    component: () => import(/* webpackChunkName: "Article" */ '../views/ManageCategory.vue'),
     meta: { // 在路由配置中加入meta:{requireAuth: true}
       requireAuth: true
    },
@@ -54,6 +78,8 @@ const router = new VueRouter({
 })
 router.beforeEach((to,from,next)=>{
   if(to.meta.requireAuth){
+    console.log('state.token')
+    console.log(store.state.token)
     if(store.state.token){
       next()
     }else{

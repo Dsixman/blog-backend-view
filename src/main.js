@@ -6,6 +6,8 @@ import './plugins/element.js'
 import Axios from 'axios'
 import VueAxios from 'vue-axios'
 
+
+
 Axios.defaults.headers.common['Auth-Token'] = store.state.token;
 Vue.use(VueAxios,Axios)
 

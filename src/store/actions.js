@@ -7,9 +7,10 @@ export default{
             console.log(response)
             let data=response.data
             let token=data.token
-            let expire_time=data.expire_time
-            commit(mutation.RECEIVE_TOKEN,token)
-            localStorage.setItem('token',{'token':token,'expire_time':expire_time})
+            console.log('mutation.RECEIVE_TOKEN: '+mutation.RECEIVE_TOKEN)
+            commit(mutation.RECEIVE_TOKEN,{token})
+            localStorage.setItem('token',token)
+            console.log(localStorage.getItem('token'))
         }).catch((err)=>{
             console.log(err)
         })
