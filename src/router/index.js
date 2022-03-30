@@ -60,6 +60,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "Login" */ '../views/Login.vue')
   },
   {
+    path: '/404',
+    name: '404',
+    component: () => import(/* webpackChunkName: "404" */ '../views/404.vue')
+  },
+  {
     path: '/notice',
     name: 'Notice',
     component: () => import(/* webpackChunkName: "notice" */ '../views/Notice.vue'),
@@ -78,9 +83,8 @@ const router = new VueRouter({
 })
 router.beforeEach((to,from,next)=>{
   if(to.meta.requireAuth){
-    console.log('state.token')
-    console.log(store.state.token)
-    if(store.state.token){
+    if(store.state.token||localStorage.getItem('token')){
+      //console.log(localStorage.getItem('token'))      
       next()
     }else{
       next({path:'/login',query:{redirect:to.fullPath}})

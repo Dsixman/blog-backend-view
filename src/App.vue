@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-
     <el-container>
       <el-aside class="left">
         <el-row class="left-title">zzh blog</el-row>
@@ -15,7 +14,7 @@
           </div>
         </el-row>
       </el-aside>
-      <el-main>     <router-view></router-view> </el-main>
+      <el-main><div class="blog-right"><router-view></router-view> </div> </el-main>
     </el-container>
 
   </div>
@@ -66,6 +65,13 @@ body {
   text-align: center;
   color: #2c3e50;
   background: #f5f5f5;
+  .el-main{
+    padding:10px;
+    .blog-right{
+      border:1px solid #DCDFE6;
+    }
+
+  }
   .left {
   background: #303643;
   color: #fff;

@@ -7,8 +7,15 @@ import Axios from 'axios'
 import VueAxios from 'vue-axios'
 
 
-
-Axios.defaults.headers.common['Auth-Token'] = store.state.token;
+//console.log('mian: '+localStorage.getItem('token'))
+Axios.defaults.headers.common['Auth-Token'] = store.state.token||localStorage.getItem('token');
+Axios.interceptors.response.use(data => {
+ // loadinginstace.close();
+  const code = data.data.code;
+  if(code == (401||403||404)) { //未登录
+    router.push('/404')
+  }
+})
 Vue.use(VueAxios,Axios)
 
 Vue.config.productionTip = false

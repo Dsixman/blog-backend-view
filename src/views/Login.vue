@@ -34,7 +34,7 @@ export default {
   methods: {
     login(){
       this.$store.dispatch('getAuth',{user_name:this.userName,pwd:this.pwd})
-      this.$router.push('/')
+      //this.$router.push('/')
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）

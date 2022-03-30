@@ -8,3 +8,9 @@ let req_url=process.env=='production'?'http://m78star.top':'http://localhost:300
 export const reqLogin=(data)=>{
 	return Vue.axios.post(req_url+'/login',data)
 };
+export const reqSaveBlog=(data)=>{
+	return Vue.axios.post(req_url+'/editblog',data)
+};
+export const reqAllCategory=()=>{
+	return Vue.axios.get(req_url+'/getallcategory')
+};
