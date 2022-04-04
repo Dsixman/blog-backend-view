@@ -14,3 +14,27 @@ export const reqSaveBlog=(data)=>{
 export const reqAllCategory=()=>{
 	return Vue.axios.get(req_url+'/getallcategory')
 };
+export const reqAddReport=()=>{
+	return Vue.axios.get(req_url+'/addreport')
+};
+export const reqAllReports=()=>{
+	return Vue.axios.get(req_url+'/getallreport')
+};
+export const reqAddCategory=()=>{
+	return Vue.axios.get(req_url+'/addcategory')
+};
+export const reqAllArticals=()=>{
+	return Vue.axios.get(req_url+'/getallarticals')
+};
+export const reqDeleteArtical=(request)=>{
+	return Vue.axios.get(req_url+'/deteleartical',request)
+};
+export const reqUpdateArtical=(request)=>{
+	return Vue.axios.get(req_url+'/updateartical',request)
+};
+export const reqDeleteReport=(request)=>{
+	return Vue.axios.get(req_url+'/detelereport',request)
+};
+export const reqDeleteCategory=(request)=>{
+	return Vue.axios.get(req_url+'/detelereport',request)
+};

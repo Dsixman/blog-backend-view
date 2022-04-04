@@ -1,55 +1,54 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '../store'
-import Home from '../views/Home.vue'
-
+//import main from '@/component/main.vue'
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    redirect:'/home',
   },
   {
-    path: '/feedback',
-    name: 'Feedback',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "feedback" */ '../views/Feedback.vue'),
-    meta: { // 在路由配置中加入meta:{requireAuth: true}
-      requireAuth: true
-   },
-  },
-  {
-    path: '/manageblog',
-    name: 'ManageBlog',
-    component: () => import(/* webpackChunkName: "Article" */ '../views/ManageBlog.vue'),
-    meta: { // 在路由配置中加入meta:{requireAuth: true}
-      requireAuth: true
-   },
+    path:'/home',
+    name:'home',
+    component: () => import(/* webpackChunkName: "Home" */ '../views/Home.vue'),
+    children:[
+      {
+        path: '/feedback',
+        name: 'Feedback',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () => import(/* webpackChunkName: "feedback" */ '../views/Feedback.vue'),
+        meta: { // 在路由配置中加入meta:{requireAuth: true}
+          requireAuth: true
+       },
+      },
+      {
+        path: '/manageblog',
+        name: 'ManageBlog',
+        component: () => import(/* webpackChunkName: "Article" */ '../views/ManageBlog.vue'),
+        meta: { // 在路由配置中加入meta:{requireAuth: true}
+          requireAuth: true
+       },
+      },
+
+      {
+        path: '/managecategory',
+        name: 'managecategory',
+        component: () => import(/* webpackChunkName: "Article" */ '../views/ManageCategory.vue'),
+        meta: { // 在路由配置中加入meta:{requireAuth: true}
+          requireAuth: true
+       },
+      },
+      
+    ]
   },
   {
     path: '/editblog',
     name: 'EditBlog',
     component: () => import(/* webpackChunkName: "Article" */ '../views/EditBlog.vue'),
-    meta: { // 在路由配置中加入meta:{requireAuth: true}
-      requireAuth: true
-   },
-  },
-  {
-    path: '/managetag',
-    name: 'managetag',
-    component: () => import(/* webpackChunkName: "Article" */ '../views/ManageTag.vue'),
-    meta: { // 在路由配置中加入meta:{requireAuth: true}
-      requireAuth: true
-   },
-  },
-  {
-    path: '/managecategory',
-    name: 'managecategory',
-    component: () => import(/* webpackChunkName: "Article" */ '../views/ManageCategory.vue'),
     meta: { // 在路由配置中加入meta:{requireAuth: true}
       requireAuth: true
    },
@@ -64,15 +63,6 @@ const routes = [
     name: '404',
     component: () => import(/* webpackChunkName: "404" */ '../views/404.vue')
   },
-  {
-    path: '/notice',
-    name: 'Notice',
-    component: () => import(/* webpackChunkName: "notice" */ '../views/Notice.vue'),
-    meta: { // 在路由配置中加入meta:{requireAuth: true}
-      requireAuth: true
-   },
-  }
-  
 ]
 
 
