@@ -14,28 +14,30 @@ export default {
     [mutation_type.RECEIVE_ALL_CATEGORY](state,{allCategory}){
         state.allCategory=allCategory
     } ,
-    [mutation_type.RECEIVE_ALL_ARTICLAS](state,{allArticals}){
+    [mutation_type.RECEIVE_ALL_ARTICALS](state,{allArticals}){
         state.allArticals=allArticals
     },
-    [mutation_type.RECEIVE_ALL_REPORt](state,{allReport}){
+    [mutation_type.RECEIVE_ALL_REPORTS](state,{allReport}){
         state.allReport=allReport
     },
-    [mutation_type.RECEIVE_UPDATE_ARTICAL](state,{stateText}){
+    [mutation_type.RECEIVE_STATE_TEXT](state,{stateText}){
         state.stateText=stateText
     },
-    [mutation_type.RECEIVE_DELETE_ARTICAL](state,{stateText}){
-        state.stateText=stateText
-    } ,
-    [mutation_type.RECEIVE_ADD_CATEGORY](state,{stateText}){
-        state.stateText=stateText
+    [mutation_type.RECEIVE_FIND_ARTICAL](state,{findArtical}){
+        state.findArtical=findArtical
     },
-    [mutation_type.RECEIVE_DELETE_CATEGORY](state,{stateText}){
-        state.stateText=stateText
-    } ,
-    [mutation_type.RECEIVE_ADD_REPORT](state,{stateText}){
-        state.stateText=stateText
+    [mutation_type.RECEIVE_COMPUTED_ARTICALS](state,{computedArticals}){
+        state.computedArticals=computedArticals
     },
-    [mutation_type.RECEIVE_DELETE_REPORT](state,{stateText}){
-        state.stateText=stateText
-    }  
+    [mutation_type.RECEIVE_COMPUTED_CATEGORY](state,{computedCategory}){
+        state.computedCategory=computedCategory
+    },
+    [mutation_type.RECEIVE_COMPUTED_REPORTS](state,{computedReports}){
+        state.computedReports=computedReports
+    },
+
+    [mutation_type.RECEIVE_EDITOR_CATEGORY](state,{editorCategory}){
+        state.editorCategory=editorCategory
+    },
+ 
 }

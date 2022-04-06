@@ -5,36 +5,44 @@ Vue.use(VueAxios,Axios)
 
 let req_url=process.env=='production'?'http://m78star.top':'http://localhost:3000'
 
-export const reqLogin=(data)=>{
-	return Vue.axios.post(req_url+'/login',data)
+export const reqLogin=(request)=>{
+	return Vue.axios.post(req_url+'/login',request)
 };
-export const reqSaveBlog=(data)=>{
-	return Vue.axios.post(req_url+'/editblog',data)
+export const reqSaveBlog=(request)=>{
+	return Vue.axios.post(req_url+'/editblog',request)
 };
 export const reqAllCategory=()=>{
 	return Vue.axios.get(req_url+'/getallcategory')
 };
-export const reqAddReport=()=>{
-	return Vue.axios.get(req_url+'/addreport')
+export const reqAddReport=(request)=>{
+	return Vue.axios.post(req_url+'/addreport',request)
 };
-export const reqAllReports=()=>{
-	return Vue.axios.get(req_url+'/getallreport')
+export const reqAllReports=(request)=>{
+	return Vue.axios.get(req_url+'/getallreport',request)
 };
-export const reqAddCategory=()=>{
-	return Vue.axios.get(req_url+'/addcategory')
+export const reqAddCategory=(request)=>{
+	return Vue.axios.post(req_url+'/addcategory',request)
 };
+
+export const reqEditorCategory=(request)=>{
+	return Vue.axios.post(req_url+'/editorcategory',request)
+};
+
 export const reqAllArticals=()=>{
 	return Vue.axios.get(req_url+'/getallarticals')
 };
+export const reqFindArtical=(request)=>{
+	return Vue.axios.post(req_url+'/findartical',request)
+};
 export const reqDeleteArtical=(request)=>{
-	return Vue.axios.get(req_url+'/deteleartical',request)
+	return Vue.axios.post(req_url+'/deleteartical',request)
 };
 export const reqUpdateArtical=(request)=>{
-	return Vue.axios.get(req_url+'/updateartical',request)
+	return Vue.axios.post(req_url+'/updateartical',request)
 };
 export const reqDeleteReport=(request)=>{
-	return Vue.axios.get(req_url+'/detelereport',request)
+	return Vue.axios.post(req_url+'/deletereport',request)
 };
 export const reqDeleteCategory=(request)=>{
-	return Vue.axios.get(req_url+'/detelereport',request)
+	return Vue.axios.post(req_url+'/deletecategory',request)
 };

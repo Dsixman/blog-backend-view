@@ -4,5 +4,10 @@ export default{
     allCategory:null,
     allArticals:null,
     allReports:null,
-    stateText:''
+    stateText:'',
+    findArtical:'',
+    computedCategory:null,
+    editorCategory:null,
+    computedArticals:null,
+    computedReports:null,
 }

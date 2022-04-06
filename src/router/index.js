@@ -42,6 +42,14 @@ const routes = [
           requireAuth: true
        },
       },
+      {
+        path: '/managereport',
+        name: 'managereport',
+        component: () => import(/* webpackChunkName: "Article" */ '../views/ManageReport.vue'),
+        meta: { // 在路由配置中加入meta:{requireAuth: true}
+          requireAuth: true
+       },
+      },
       
     ]
   },

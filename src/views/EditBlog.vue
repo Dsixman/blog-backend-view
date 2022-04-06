@@ -80,7 +80,7 @@ export default {
       if (this.$store.state.allCategory) {
         console.log("computed");
         console.log(this.$store.state.allCategory);
-        this.$store.state.allCategory.forEach((element) => {
+        this.$store.state.allCategory.list.forEach((element) => {
           allCategory.push({ value: element, label: element });
         });
       }

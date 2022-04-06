@@ -27,7 +27,7 @@ left_nav:[
         {iclass:'el-icon-edit-outline',title:'发布博客',router:'/editblog'},
         {iclass:'el-icon-s-management',title:'管理博客',router:'/manageblog'},
         {iclass:'el-icon-collection-tag',title:'分类管理',router:'/managecategory'},
-        {iclass:'el-icon-collection-tag',title:'专题管理',router:'/specialreport'},
+        {iclass:'el-icon-collection-tag',title:'专题管理',router:'/managereport'},
         {iclass:'el-icon-s-flag',title:'评论管理',router:'/managetag'},
         ],
         selectIndex:null
@@ -96,13 +96,6 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
     height: 50px;
     line-height: 50px;
     width: 100%;
-  }
-  .left-ava {
-    height: 200px;
-    background: url("../assets/ava.jpg") no-repeat center center;
-    width: 200px;
-    border-radius: 50%;
-    margin:0 auto;
   }
 
   .left-categroy {

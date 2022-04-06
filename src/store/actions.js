@@ -23,7 +23,6 @@ export default{
             let blog=response.data
             //let to=data.token
             commit(mutation_type.RECEIVE_BLOG,{blog})
-        
         }).catch((err)=>{
             console.log(err)
         })
@@ -33,7 +32,18 @@ export default{
             console.log('allarticals')
             console.log(response)
             let allArticals=response.data.allarticals
-            commit(mutation_type.RECEIVE_ALL_CATEGORY,{ allArticals})
+            commit(mutation_type.RECEIVE_ALL_ARTICALS,{ allArticals})
+            //console.log(state.allCategory)
+        }).catch(err=>{
+            console.log(err)
+        })
+    },
+    async findArtical({commit},request){
+        await api.reqFindArtical(request).then(response=>{
+            console.log('find articals')
+            console.log(response)
+            let findArtical=response.data.findartical
+            commit(mutation_type.RECEIVE_ALL_ARTICALS,{ findArtical})
             //console.log(state.allCategory)
         }).catch(err=>{
             console.log(err)
@@ -41,11 +51,11 @@ export default{
     },
     async updateArtical({commit},request){
         await api.reqDeleteArtical(request).then(response=>{
-            console.log(this)
+            
             console.log('update artical')
             console.log(response)
             let stateText=response.data.stateText
-            commit(mutation_type.RECEIVE_UPDATE_ARTICAL,{stateText})
+            commit(mutation_type.RECEIVE_STATE_TEXT,{stateText})
             //console.log(state.allCategory)
         }).catch(err=>{
             console.log(err)
@@ -53,11 +63,11 @@ export default{
     },
     async deleteArtical({commit},request){
         await api.reqDeleteArtical(request).then(response=>{
-            console.log(this)
+            
             console.log('delet artical')
             console.log(response)
             let stateText=response.data.stateText
-            commit(mutation_type.RECEIVE_DELETE_ARTICAL,{stateText})
+            commit(mutation_type.RECEIVE_STATE_TEXT,{stateText})
             //console.log(state.allCategory)
         }).catch(err=>{
             console.log(err)
@@ -66,23 +76,51 @@ export default{
 
     async getAllCategory({commit}){
         await api.reqAllCategory().then(response=>{
-            console.log(this)
+            
             console.log('all category')
             console.log(response)
             let allCategory=response.data.allCategory
+            let computedCategory= allCategory
             commit(mutation_type.RECEIVE_ALL_CATEGORY,{ allCategory})
+            commit(mutation_type.RECEIVE_COMPUTED_CATEGORY,{computedCategory})
+
             //console.log(state.allCategory)
         }).catch(err=>{
             console.log(err)
         })
     },
+    async addCategory({commit},request){
+        await api.reqAddCategory(request).then(response=>{
+            console.log('add category111')
+            console.log(response)
+            //let allCategory=response.data.allCategory
+            let stateText=response.data.stateText
+            commit(mutation_type.RECEIVE_STATE_TEXT,{stateText})
+            //console.log(state.allCategory)
+        }).catch(err=>{
+            console.log(err)
+        })
+    },
+    async editorCategory({commit},request){
+        await api.reqEditorCategory(request).then(response=>{
+        console.log('editor category')
+        console.log(response)
+        //let allCategory=response.data.allCategory
+        let stateText=response.data.stateText
+        commit(mutation_type.RECEIVE_STATE_TEXT,{stateText})
+        //console.log(state.allCategory)
+    }).catch(err=>{
+        console.log(err)
+    })
+},
+
+
     async deleteCategory({commit},request){
         await api.reqDeleteCategory(request).then(response=>{
-            console.log(this)
             console.log('delete category')
             console.log(response)
             let stateText=response.data.stateText
-            commit(mutation_type.RECEIVE_DELETE_CATEGORY,{stateText})
+            commit(mutation_type.RECEIVE_STATE_TEXT,{stateText})
             //console.log(state.allCategory)
         }).catch(err=>{
             console.log(err)
@@ -90,11 +128,23 @@ export default{
     },
     async getAllReports({commit}){
         await api.reqAllReports().then(response=>{
-            console.log(this)
+            
             console.log('all reports')
             console.log(response)
-            let allReports=response.data.allReportss
-            commit(mutation_type.RECEIVE_ALL_CATEGORY,{ allReports})
+            let allReports=response.data.allReports
+            commit(mutation_type.RECEIVE_ALL_REPORTS,{ allReports})
+            //console.log(state.allCategory)
+        }).catch(err=>{
+            console.log(err)
+        })
+    },
+    async addReport({commit},request){
+        await api.reqAddReport(request).then(response=>{
+            console.log('add report')
+            console.log(response)
+            let stateText=response.data.stateText
+            //let =response.data.stateText
+            commit(mutation_type.RECEIVE_STATE_TEXT,{ stateText})
             //console.log(state.allCategory)
         }).catch(err=>{
             console.log(err)
@@ -102,14 +152,26 @@ export default{
     },
     async deleteReport({commit},request){
         await api.reqDeleteReport(request).then(response=>{
-            console.log(this)
             console.log('delete report')
             console.log(response)
             let stateText=response.data.stateText
-            commit(mutation_type.RECEIVE_DELETE_REPORT,{stateText})
+            commit(mutation_type.RECEIVE_STATE_TEXT,{stateText})
             //console.log(state.allCategory)
         }).catch(err=>{
             console.log(err)
         })
     },
+    computedReports({commit},data){
+        let computedReports=data
+        commit(mutation_type.RECEIVE_COMPUTED_REPORTS,{computedReports})
+    },
+    computedArticals({commit},data){
+        let computedArticals=data
+        commit(mutation_type.RECEIVE_COMPUTED_ARTICALS,{computedArticals})
+    },
+    computedCategory({commit},data){
+        let computedCategory=data
+        commit(mutation_type.RECEIVE_COMPUTED_CATEGORY,{computedCategory})
+    }
+    
 }
