@@ -12,7 +12,9 @@
           </el-input>
         </el-col>
         <el-col :span="3">
-          <el-button type="primary"  @click="dialogVisible = true">添加分类</el-button>
+          <el-button type="primary" @click="dialogVisible = true"
+            >添加分类</el-button
+          >
           <el-dialog
             title="添加分类"
             :visible.sync="dialogVisible"
@@ -49,15 +51,19 @@
           <el-table :data="tableData" stripe style="width: 100%">
             <el-table-column prop="id" label="序号"> </el-table-column>
             <el-table-column prop="name" label="分类名"> </el-table-column>
-            <el-table-column prop="description" label="分类介绍"></el-table-column>
-            <el-table-column fixed="right" label="操作" >
+            <el-table-column
+              prop="description"
+              label="分类介绍"
+            ></el-table-column>
+            <el-table-column fixed="right" label="操作">
               <template slot-scope="scope">
-        <el-button
-          size="mini"
-          @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
                 <el-button
-                  @click="delCategory(scope.$index,scope.row)"
-                  
+                  size="mini"
+                  @click="handleEdit(scope.$index, scope.row)"
+                  >Edit</el-button
+                >
+                <el-button
+                  @click="delCategory(scope.$index, scope.row)"
                   size="small"
                   >删除类目</el-button
                 >
@@ -86,21 +92,22 @@ export default {
   components: {},
   data() {
     return {
-        search:'',
-        currentPage:5,
-        form:{
-            category:'',
-            categoryDes:'',
-        },
-             dialogVisible: false,
+      search: "",
+      currentPage: 5,
+      form: {
+        category: "",
+        categoryDes: "",
+      },
+      dialogVisible: false,
+      updateId: null,
     };
   },
   computed: {
     tableData() {
       let table = [];
-    //  console.log(this.$store.state.computedCategory)
+      //  console.log(this.$store.state.computedCategory)
       if (this.$store.state.computedCategory) {
-           console.log(this.$store.state.computedCategory)
+        console.log(this.$store.state.computedCategory);
         this.$store.state.computedCategory.list.forEach((element, index) => {
           table.push({
             id: index,
@@ -115,34 +122,48 @@ export default {
   watch: {},
   methods: {
     addCategory() {
-        console.log("this.form.category "+this.form.category)
-        if(!this.form.category){
-                  let request = {
-        title: "文章类目",
-        list: {
-          name: this.form.category,
+      console.log("this.form.category " + this.form.category);
+      if (!this.form.category) {
+        let request = {
+          title: "文章类目",
+          list: {
+            name: this.form.category,
+            description: this.form.categoryDes,
+          },
+        };
+        this.$store.dispatch("addCategory", request);
+        this.tableData.push({
+          id: 0,
+          title: this.form.category,
           description: this.form.categoryDes,
-        },
-      };
-      this.$store.dispatch("addCategory", request); 
-      this.tableData.push({id:0,title:this.form.category,description:this.form.categoryDes})
-        }else{
-            console.log('修改并更新 某个分类')
-            console.log(this.form.categoryDes)
-            this.$store.dispatch("editorCategory",{name: this.form.category,description: this.form.categoryDes})
-        }
+        });
+      } else {
+        console.log("修改并更新 某个分类");
+        console.log(this.form.categoryDes);
+        (async () => {
+          this.$store.dispatch("editorCategory", {
+            name: this.form.category,
+            description: this.form.categoryDes,
+          });
+          let computedCategory = this.$store.state.computedCategory;
+          computedCategory.list[this.updateId].name = this.form.report;
+          computedCategory.list[this.updateId].description =
+            this.form.description;
+          this.$store.dispatch("computedReports", computedCategory);
+        })();
+      }
 
-      this.dialogVisible = false
+      this.dialogVisible = false;
     },
-    handleEdit(index,row){
-        
-        this.form.category=row.name
-        this.form.categoryDes=row.description
-        // let computedCategory=JSON.stringify(this.$store.state.computedCategory)
-        // computedCategory[index]={name:row.name,description:row.description}
-        // this.$store.dispatch('computedCategory',computedCategory)
-        console.log("this.form.category "+this.form.category)
-        this.dialogVisible=true
+    handleEdit(index, row) {
+      this.form.category = row.name;
+      this.form.categoryDes = row.description;
+      this.updateId = index;
+      // let computedCategory=JSON.stringify(this.$store.state.computedCategory)
+      // computedCategory[index]={name:row.name,description:row.description}
+      // this.$store.dispatch('computedCategory',computedCategory)
+      console.log("this.form.category " + this.form.catefgory);
+      this.dialogVisible = true;
     },
     handleClose(done) {
       this.$confirm("确认关闭？")
@@ -154,37 +175,38 @@ export default {
           console.log(err);
         });
     },
-         handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
-      },
-      delCategory(index,row){
-          console.log('index')
-          console.log(index)
-          console.log('row')
-          console.log(row)
-        this.$store.dispatch('deleteCategory',{name:row.name})
-        let category={}
-        let computedCategoryList=this.$store.state.computedCategory.list
-         category["list"]=computedCategoryList.filter(function(computedCategoryList){
-            return computedCategoryList.name!==row.name
-        })
-        category.title=this.$store.state.computedCategory.title
-        this.$store.dispatch("computedCategory",category)
-      }
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+    },
+    delCategory(index, row) {
+      console.log("index");
+      console.log(index);
+      console.log("row");
+      console.log(row);
+      this.$store.dispatch("deleteCategory", { name: row.name });
+      let category = {};
+      let computedCategoryList = this.$store.state.computedCategory.list;
+      category["list"] = computedCategoryList.filter(function (
+        computedCategoryList
+      ) {
+        return computedCategoryList.name !== row.name;
+      });
+      category.title = this.$store.state.computedCategory.title;
+      this.$store.dispatch("computedCategory", category);
+    },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    (async ()=>{
-      await  this.$store.dispatch("getAllCategory")
-        })()
+    this.$store.dispatch("getAllCategory");
+    // (async ()=>{
+    //   await  this.$store.dispatch("getAllCategory")
+    //     })()
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {
-
-  },
+  mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前
   beforeMount() {}, //生命周期 - 挂载之前
   beforeUpdate() {}, //生命周期 - 更新之前

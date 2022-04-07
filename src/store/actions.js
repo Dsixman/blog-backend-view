@@ -128,11 +128,12 @@ export default{
     },
     async getAllReports({commit}){
         await api.reqAllReports().then(response=>{
-            
             console.log('all reports')
             console.log(response)
             let allReports=response.data.allReports
+            let computedReports=allReports
             commit(mutation_type.RECEIVE_ALL_REPORTS,{ allReports})
+            commit(mutation_type.RECEIVE_COMPUTED_REPORTS,{computedReports})
             //console.log(state.allCategory)
         }).catch(err=>{
             console.log(err)
@@ -141,6 +142,20 @@ export default{
     async addReport({commit},request){
         await api.reqAddReport(request).then(response=>{
             console.log('add report')
+            console.log(response)
+            let stateText=response.data.stateText
+            //let =response.data.stateText
+            commit(mutation_type.RECEIVE_STATE_TEXT,{ stateText})
+            //console.log(state.allCategory)
+        }).catch(err=>{
+            console.log(err)
+        })
+    },
+    async updateReport({commit},request){
+        console.log('update request')
+        console.log(request)
+        await api.reqUpdateReport(request).then(response=>{
+            console.log('update report')
             console.log(response)
             let stateText=response.data.stateText
             //let =response.data.stateText

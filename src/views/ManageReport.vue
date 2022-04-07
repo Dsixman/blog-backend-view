@@ -1,43 +1,37 @@
 <template>
   <el-container class="blog-container">
     <el-main class="blog-main">
-      <el-row class="search-container">
-        <el-col :span=3>
-            <el-button type="primary" @click="dialogVisible = true"
-            >添加专题</el-button>
-
-          <el-dialog
-            title="添加专题"
-            :visible.sync="dialogVisible"
-            width="30%"
-            :before-close="handleClose"
+      <el-row class="search-container" type="flex">
+        <el-col :span="10">
+          <el-input
+            placeholder="请输入专题"
+            v-model="search"
+            class="input-with-select"
           >
+            <el-button
+              slot="append"
+              icon="el-icon-search"
+              @click="searchReport(search)"
+            ></el-button>
+          </el-input>
+        </el-col>
+        <el-col :span="3">
+          <el-button type="primary" @click="dialogVisible = true;dealType='添加专题'"
+            >添加专题</el-button
+          >
+          <el-dialog title="添加专题" :visible.sync="dialogVisible" width="30%">
             <el-form ref="form" :model="form" size="small" label-width="100px">
-              <el-row type="flex">
-                <!-- <el-col  style="display:flex; align-items:center;justify-content:end;width:100px"> <span>上传图片：</span></el-col>
-                <el-col>
-                  <el-upload
-                    class="avatar-uploader"
-                    action="https://jsonplaceholder.typicode.com/posts/"
-                    :show-file-list="false"
-                    :on-success="handleAvatarSuccess"
-                    :before-upload="beforeAvatarUpload"
-                  >
-                    <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                  </el-upload>
-                </el-col> -->
-              </el-row>
+              <el-row type="flex"> </el-row>
               <el-row>
                 <el-col>
                   <el-form-item label="专题名：">
-                    <el-input class="search-input" v-model="form.report" />
+                    <el-input class="search-input" v-model="form.name" />
                   </el-form-item>
                   <el-form-item label="专题介绍：">
                     <el-input
                       type="textarea"
                       class="search-input"
-                      v-model="form.reportDes"
+                      v-model="form.description"
                     />
                   </el-form-item>
                 </el-col>
@@ -51,7 +45,43 @@
           </el-dialog>
         </el-col>
       </el-row>
-      <el-row class="article-list-container"> </el-row>
+      <el-row class="article-list-container">
+        <el-col>
+          <el-table :data="pagetable" stripe style="width: 100%">
+            <el-table-column prop="id" label="序号"> </el-table-column>
+            <el-table-column prop="name" label="专题名"> </el-table-column>
+            <el-table-column
+              prop="description"
+              label="专题介绍"
+            ></el-table-column>
+            <el-table-column fixed="right" label="操作">
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  @click="handleEdit(scope.$index, scope.row)"
+                  >编辑</el-button
+                >
+                <el-button
+                  @click="delReport(scope.$index, scope.row)"
+                  size="small"
+                  >删除专题</el-button
+                >
+              </template>
+            </el-table-column>
+          </el-table>
+          <div class="block">
+            <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page.sync="currentPage"
+              :page-size="pageSize"
+              layout="prev, pager, next, jumper"
+              :total="totalRecord"
+            >
+            </el-pagination>
+          </div>
+        </el-col>
+      </el-row>
     </el-main>
   </el-container>
 </template>
@@ -62,39 +92,109 @@ export default {
   data() {
     return {
       dialogVisible: false,
+      search: "",
+      currentPage: 1,
       imageUrl: "",
       form: {
         report: "",
-        reportDes: "",
+        description: "",
       },
+      updateId: null,
+      pageSize: 10,
+      dealType:'',
+      //totalRecord:0
     };
   },
   computed: {
-    allReport() {
-      let allReports = [];
-      if (this.$store.state.allReport) {
-        console.log("computed");
-        console.log(this.$store.state.allReports);
-        this.$store.state.allCategory.forEach((element) => {
-          allReports.push({ value: element, label: element });
+    tableData() {
+      let table = [];
+      //  let showtable=[]
+      console.log('tabelData computedReports')
+    console.log(this.$store.state.computedReports)
+    console.log('search')
+    console.log(this.search)
+      if (this.$store.state.computedReports.list && this.search==="") {
+     //   console.log("tabelData computedReports");
+       // console.log(this.$store.state.computedReports);
+       console.log('无搜索')
+        this.$store.state.computedReports.list.forEach((element, index) => {
+          table.push({
+            id: index,
+            name: element.name,
+            description: element.description,
+          });
         });
       }
-      return allReports;
+      if (this.search!=="" && this.$store.state.computedReports.list) {
+           console.log('有搜索')
+        this.$store.state.computedReports.list.forEach((element, index) => {
+          console.log(element, index);
+          if (element.name.indexOf(this.search) !== -1) {
+            table.push({
+              id: index,
+              name: element.name,
+              description: element.description,
+            });
+          }
+        });
+      }
+     console.log('tableData')
+      console.log(table)
+      return table
+    },
+    pagetable(){
+      let endIndex;
+      let startIndex = (this.currentPage - 1) * this.pageSize;
+     console.log('pagetable')
+       console.log(this.tableData)
+      if (this.tableData.length > startIndex + this.pageSize) {
+        endIndex = startIndex + this.pageSize;
+         return this.tableData.slice(startIndex, endIndex);
+      } else {
+         return this.tableData.slice(startIndex);
+      }
+     // console.log(startIndex);
+
+      ///this.totalRecord=table.length;
+     
+    },
+    totalRecord() {
+        console.log( 'tableData length')
+      console.log(this.tableData)
+      return this.tableData.length;
     },
   },
   watch: {},
   methods: {
-    handleClose(done) {
-      this.$confirm("确认关闭？")
-        .then((data) => {
-          console.log(data);
-          done();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    searchReport(value) {
+      this.search = value;
     },
-
+    // handleClose(done) {
+    //   this.$confirm("确认关闭？")
+    //     .then((data) => {
+    //       console.log(data);
+    //       done();
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
+    delReport(index, row) {
+      (async () => {
+        await this.$store.dispatch("deleteReport", { name: row.name });
+        let report = {};
+        console.log(this.$store.state.computedReports);
+        let computedReportList = this.$store.state.computedReports.list;
+        report["list"] = computedReportList.filter(function (
+          computedReportList
+        ) {
+          return computedReportList.name !== row.name;
+        });
+        report.title = this.$store.state.computedReports.title;
+        this.$store.dispatch("computedReports", report);
+        //    this.total=this.total-1;
+      })();
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
@@ -116,24 +216,72 @@ export default {
       }
       return isJPG && isLt2M;
     },
+    handleEdit(index, row) {
+      this.updateId = index;
+      this.form.name = row.name;
+      this.form.description = row.description;
+      this.dealType="更新专题"
+      this.dialogVisible = true;
+    },
     addReport() {
-      let request = {
-        title: "文章专题",
-        list: 
-          {
-            report: this.form.report,
-            reportDescription: this.form.reportDes,
+        console.log(this.dealType)
+      if (this.dealType=="添加专题") {
+        let request = {
+          title: "文章专题",
+          list: {
+            name: this.form.name,
+            description: this.form.description,
           },
-        
-      };
-      this.$store.dispatch("addReport", request);
-      console.log("aaa");
-      this.dialogVisible = false;
+        };
+        (async () => {
+          await this.$store.dispatch("addReport", request);
+          
+          let computedReports=JSON.parse(JSON.stringify(this.$store.state.computedReports))
+          console.log(computedReports.list)
+          computedReports.list.push(request.list)
+          console.log(computedReports.list)
+        this.$store.dispatch('computedReports',computedReports)
+       // console.log(this.$store.state.)
+            this.form.name = "";
+          this.form.description = "";
+          //      this.tatal=this.total+1
+          this.dialogVisible = false;
+        })();
+      } else {
+        console.log("修改并更新 某个专题");
+        (async () => {
+          await this.$store.dispatch("updateReport", {
+            name: this.form.name,
+            description: this.form.description,
+          });
+          console.log("自执行外面");
+          let computedReports = this.$store.state.computedReports;
+          console.log(computedReports)
+          //computedReports.list[this.updateId]={name:this.form.name,description:this.form.description}computed属性不能这样写。否则不能动态改变
+          if (computedReports.list.length === 0) {
+              computedReports.list[0]={}
+            computedReports.list[0].name = this.form.name;
+            computedReports.list[0].description = this.form.description;
+          } else {
+            computedReports.list[this.updateId].name = this.form.name;
+            computedReports.list[this.updateId].description =
+              this.form.description;
+          }
+
+          this.$store.dispatch("computedReports", computedReports);
+          console.log(this.$store.state.computedReports);
+          this.form.name = "";
+          this.form.description = "";
+          //      this.tatal=this.total+1
+          this.dialogVisible = false;
+        })();
+      }
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.$store.dispatch("getAllReports");
+    // this.total = this.$store.state.computedReports.list.length;
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},

@@ -26,6 +26,9 @@ export default {
     [mutation_type.RECEIVE_FIND_ARTICAL](state,{findArtical}){
         state.findArtical=findArtical
     },
+    [mutation_type.RECEIVE_SEARCH_REPORT](state,{searchReport}){
+        state.searchReport=searchReport
+    },
     [mutation_type.RECEIVE_COMPUTED_ARTICALS](state,{computedArticals}){
         state.computedArticals=computedArticals
     },

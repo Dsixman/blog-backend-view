@@ -34,6 +34,9 @@ export const reqAllArticals=()=>{
 export const reqFindArtical=(request)=>{
 	return Vue.axios.post(req_url+'/findartical',request)
 };
+export const reqUpdateReport=(request)=>{
+	return Vue.axios.post(req_url+'/updatereport',request)
+};
 export const reqDeleteArtical=(request)=>{
 	return Vue.axios.post(req_url+'/deleteartical',request)
 };

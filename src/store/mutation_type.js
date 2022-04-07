@@ -9,6 +9,7 @@ export const RECEIVE_COMPUTED_REPORTS='receive_computed_reports'
 export const RECEIVE_COMPUTED_CATEGORY='receive_computed_categorys'
 export const RECEIVE_COMPUTED_ARTICALS='receive_computed_articals'
 export const RECEIVE_EDITOR_CATEGORY='receive_editor_category'
+export const RECEIVE_SEARCH_REPORT='receive_search_report'
 
 // export const RECEIVE_ADD_CATEGORY='receive_add_category'
 // export const RECEIVE_DELETE_ARTICAL='receive_delete_artical'

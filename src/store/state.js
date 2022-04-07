@@ -3,11 +3,22 @@ export default{
     blog:null,
     allCategory:null,
     allArticals:null,
-    allReports:null,
+    allReports:{
+        title:'文章专题',
+        list:[{
+            name:'',
+            description:'',
+        }]},
     stateText:'',
     findArtical:'',
     computedCategory:null,
     editorCategory:null,
     computedArticals:null,
-    computedReports:null,
+    computedReports:{
+        title:'文章专题',
+        list:[{
+            name:'',
+            description:'',
+        }]
+    },
 }
