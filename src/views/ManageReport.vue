@@ -75,7 +75,7 @@
               @current-change="handleCurrentChange"
               :current-page.sync="currentPage"
               :page-size="pageSize"
-              layout="prev, pager, next, jumper"
+              layout="total,prev, pager, next, jumper"
               :total="totalRecord"
             >
             </el-pagination>
@@ -108,14 +108,7 @@ export default {
   computed: {
     tableData() {
       let table = [];
-      //  let showtable=[]
-      console.log('tabelData computedReports')
-    console.log(this.$store.state.computedReports)
-    console.log('search')
-    console.log(this.search)
       if (this.$store.state.computedReports.list && this.search==="") {
-     //   console.log("tabelData computedReports");
-       // console.log(this.$store.state.computedReports);
        console.log('无搜索')
         this.$store.state.computedReports.list.forEach((element, index) => {
           table.push({
@@ -138,8 +131,6 @@ export default {
           }
         });
       }
-     console.log('tableData')
-      console.log(table)
       return table
     },
     pagetable(){

@@ -8,19 +8,16 @@
             v-model="search"
             class="input-with-select"
           >
-            <el-button slot="append" icon="el-icon-search"></el-button>
+            <el-button slot="append" icon="el-icon-search" @click="searchCategory"></el-button>
           </el-input>
         </el-col>
         <el-col :span="3">
-          <el-button type="primary" @click="dialogVisible = true"
+          <el-button
+            type="primary"
+            @click="(dealType = '添加分类'), (dialogVisible = true)"
             >添加分类</el-button
           >
-          <el-dialog
-            title="添加分类"
-            :visible.sync="dialogVisible"
-            width="30%"
-            :before-close="handleClose"
-          >
+          <el-dialog title="添加分类" :visible.sync="dialogVisible" width="30%">
             <el-form ref="form" :model="form" size="small" label-width="100px">
               <el-row type="flex"> </el-row>
               <el-row>
@@ -48,7 +45,7 @@
       </el-row>
       <el-row class="article-list-container">
         <el-col>
-          <el-table :data="tableData" stripe style="width: 100%">
+          <el-table :data="pagetable" stripe style="width: 100%">
             <el-table-column prop="id" label="序号"> </el-table-column>
             <el-table-column prop="name" label="分类名"> </el-table-column>
             <el-table-column
@@ -75,9 +72,9 @@
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
               :current-page.sync="currentPage"
-              :page-size="100"
-              layout="prev, pager, next, jumper"
-              :total="1000"
+              :page-size="pageSize"
+              layout="total,prev, pager, next, jumper"
+              :total="totalRecord"
             >
             </el-pagination>
           </div>
@@ -93,37 +90,84 @@ export default {
   data() {
     return {
       search: "",
-      currentPage: 5,
+      currentPage: 1,
       form: {
         category: "",
         categoryDes: "",
       },
+      //pagetable: [],
       dialogVisible: false,
       updateId: null,
+      pageSize: 2,
+      dealType: "",
     };
   },
   computed: {
-    tableData() {
-      let table = [];
-      //  console.log(this.$store.state.computedCategory)
+    totalRecord() {
+      return this.$store.state.computedCategory.list.length;
+    },
+    pagetable() {
       if (this.$store.state.computedCategory) {
+        let pagetable = JSON.parse(
+          JSON.stringify(this.$store.state.computedCategory)
+        ).list;
+        console.log("pagetable computedCategory");
         console.log(this.$store.state.computedCategory);
-        this.$store.state.computedCategory.list.forEach((element, index) => {
-          table.push({
-            id: index,
-            name: element.name,
-            description: element.description,
-          });
+        if(this.search===""){
+      pagetable.forEach((element, index) => {
+          pagetable[index]["id"] = index;
         });
+        
+        let startIndex = (this.currentPage - 1) * this.pageSize;
+        if (this.totalRecord < this.pageSize) {
+          pagetable = pagetable.slice(startIndex);
+        } else {
+          let endIndex = startIndex + this.pageSize;
+          pagetable = pagetable.slice(startIndex, endIndex);
+        }
+        console.log("pagetable");
+        console.log(pagetable);
+        return pagetable;
+        }else{
+          let searcharr=[]
+          pagetable.forEach((ele,index)=>{
+            if(ele.name.indexOf(this.search)>-1){
+              searcharr.push({
+                id:index,
+                name:ele.name,
+                description:ele.description
+              })
+            }
+          })
+          let startIndex = (this.currentPage - 1) * this.pageSize;
+          if(searcharr.length<=this.pageSize||searcharr.length-startIndex<=this.pageSize){
+            pagetable=searcharr.slice(startIndex)
+          }else{
+             let endIndex = startIndex + this.pageSize;
+            pagetable=searcharr.slice(startIndex,endIndex)
+          }
+          return pagetable
+        }
+  
+      } else {
+        return [];
       }
-      return table;
+
+      // pagetable.push({
+      //   id: this.pagetable.length-1,
+      //   name: this.form.category,
+      //   description: this.form.categoryDes,
+      // });
     },
   },
   watch: {},
   methods: {
+    searchCategory(){
+
+    },
     addCategory() {
       console.log("this.form.category " + this.form.category);
-      if (!this.form.category) {
+      if (this.dealType == "添加分类") {
         let request = {
           title: "文章类目",
           list: {
@@ -131,12 +175,20 @@ export default {
             description: this.form.categoryDes,
           },
         };
-        this.$store.dispatch("addCategory", request);
-        this.tableData.push({
-          id: 0,
-          title: this.form.category,
-          description: this.form.categoryDes,
-        });
+        (async () => {
+          await this.$store.dispatch("addCategory", request);
+          let computedCategoryList = JSON.parse(
+            JSON.stringify(this.$store.state.computedCategory)
+          ).list;
+          computedCategoryList.push({
+            name: this.form.category,
+            description: this.form.categoryDes,
+          });
+          let category = { title: "文章分类", list: computedCategoryList };
+          this.$store.dispatch("computedCategory", category);
+          this.form.category = "";
+          this.form.categoryDes = "";
+        })();
       } else {
         console.log("修改并更新 某个分类");
         console.log(this.form.categoryDes);
@@ -145,36 +197,38 @@ export default {
             name: this.form.category,
             description: this.form.categoryDes,
           });
+
+          //this.pagetable.forEach()
           let computedCategory = this.$store.state.computedCategory;
-          computedCategory.list[this.updateId].name = this.form.report;
+          computedCategory.list[this.updateId].name = this.form.category;
           computedCategory.list[this.updateId].description =
-            this.form.description;
-          this.$store.dispatch("computedReports", computedCategory);
+            this.form.categoryDes;
+          this.$store.dispatch("computedCategory", computedCategory);
+          this.form.category = "";
+          this.form.categoryDes = "";
         })();
       }
 
       this.dialogVisible = false;
     },
     handleEdit(index, row) {
+      this.dealType = "更新分类";
       this.form.category = row.name;
       this.form.categoryDes = row.description;
       this.updateId = index;
-      // let computedCategory=JSON.stringify(this.$store.state.computedCategory)
-      // computedCategory[index]={name:row.name,description:row.description}
-      // this.$store.dispatch('computedCategory',computedCategory)
       console.log("this.form.category " + this.form.catefgory);
       this.dialogVisible = true;
     },
-    handleClose(done) {
-      this.$confirm("确认关闭？")
-        .then((data) => {
-          console.log(data);
-          done();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
+    // handleClose(done) {
+    //   this.$confirm("确认关闭？")
+    //     .then((data) => {
+    //       console.log(data);
+    //       done();
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
@@ -182,10 +236,6 @@ export default {
       console.log(`当前页: ${val}`);
     },
     delCategory(index, row) {
-      console.log("index");
-      console.log(index);
-      console.log("row");
-      console.log(row);
       this.$store.dispatch("deleteCategory", { name: row.name });
       let category = {};
       let computedCategoryList = this.$store.state.computedCategory.list;
@@ -194,16 +244,32 @@ export default {
       ) {
         return computedCategoryList.name !== row.name;
       });
+      let pagetableList = JSON.parse(JSON.stringify(this.pagetable));
+      pagetableList.filter(function (pagetableList) {
+        return pagetableList.name !== row.name;
+      });
+      this.pagetable = pagetableList;
       category.title = this.$store.state.computedCategory.title;
       this.$store.dispatch("computedCategory", category);
     },
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.$store.dispatch("getAllCategory");
-    // (async ()=>{
-    //   await  this.$store.dispatch("getAllCategory")
-    //     })()
+    // this.$store.dispatch("getAllCategory");
+    (async () => {
+      await this.$store.dispatch("getAllCategory");
+      console.log("created dispatch allcategory");
+      console.log(this.$store.state.allCategory);
+      // this.$store.state.allCategory.list.forEach(( ele,index) => {
+      //   this.pagetable.push({
+      //     id: index,
+      //     name: ele.name,
+      //     description: ele.description,
+      //   });
+      // });
+      // console.log('created 初始化 pagetable')
+      // console.log(this.pagetable)
+    })();
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
